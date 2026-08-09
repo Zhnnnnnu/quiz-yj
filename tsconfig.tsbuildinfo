@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/optionbutton.tsx","./src/components/progressbar.tsx","./src/components/timer.tsx","./src/database/db.ts","./src/pages/exampage.tsx","./src/pages/homepage.tsx","./src/pages/practicepage.tsx","./src/pages/wrongquestionspage.tsx","./src/utils/shuffle.ts"],"version":"5.9.3"}

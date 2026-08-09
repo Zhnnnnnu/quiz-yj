@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==================== 全局基础样式 ==================== */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family:
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'Noto Sans SC', sans-serif;
+  background: #0a0e27;
+  color: #e2e8f0;
+  overflow-x: hidden;
+  /* 适配 iPhone 底部安全区域 */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ==================== 按钮基础样式 ==================== */
+
+.btn-option {
+  @apply w-full py-4 px-5 mb-3 rounded-xl text-left text-base font-medium
+         transition-all duration-200 active:scale-[0.98]
+         border-2 border-tech-border bg-tech-card/60 text-slate-200;
+}
+
+.btn-option:active {
+  @apply border-tech-accent bg-tech-accent/10;
+}
+
+.btn-option.selected {
+  @apply border-tech-accent bg-tech-accent/15 text-cyan-300;
+}
+
+.btn-option.correct {
+  @apply border-tech-success bg-tech-success/15 text-emerald-400;
+}
+
+.btn-option.wrong {
+  @apply border-tech-error bg-tech-error/15 text-red-400;
+}
+
+.btn-primary {
+  @apply w-full py-4 rounded-xl text-base font-semibold
+         bg-gradient-to-r from-blue-600 to-cyan-500 text-white
+         transition-all duration-200 active:scale-[0.98]
+         disabled:opacity-40 disabled:active:scale-100;
+}
+
+.btn-secondary {
+  @apply w-full py-4 rounded-xl text-base font-semibold
+         border-2 border-tech-accent text-tech-accent
+         transition-all duration-200 active:scale-[0.98];
+}
+
+/* ==================== 卡片容器 ==================== */
+
+.card {
+  @apply bg-tech-card/70 backdrop-blur rounded-2xl border border-tech-border/50 p-5;
+}
+
+/* ==================== 进度条 ==================== */
+
+.progress-bar {
+  @apply h-2 rounded-full bg-tech-border/40 overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400
+         transition-all duration-500 ease-out;
+}
+
+/* ==================== 计时器 ==================== */
+
+.timer {
+  @apply font-mono text-lg font-semibold tracking-wider;
+}
+
+.timer.warning {
+  @apply text-tech-warning;
+}
+
+.timer.danger {
+  @apply text-tech-error animate-pulse;
+}
+
+/* ==================== 页面过渡动画 ==================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* ==================== 滚动条美化 ==================== */
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e2d5c;
+  border-radius: 2px;
+}
