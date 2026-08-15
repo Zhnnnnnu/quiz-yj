@@ -2,6 +2,7 @@
 // 使用 idb 库简化 IndexedDB 操作，提供 Promise 风格 API
 
 import { openDB, type IDBPDatabase } from 'idb';
+import questionsData from '../data/questions.json';
 
 // ==================== 数据类型定义 ====================
 
@@ -171,6 +172,62 @@ export async function isWrongQuestion(id: string): Promise<boolean> {
   const db = await getDB();
   const result = await db.get('wrong_questions', id);
   return !!result;
+}
+
+// ==================== 错题本答案同步 ====================
+
+const WRONG_SYNC_FLAG = 'wrong_questions_synced_v1';
+
+/**
+ * 将错题本中已存题目的答案/选项快照同步为当前题库的最新值。
+ * 题库修正答案后，用户错题本里可能仍存有旧答案，复习时会看到错误答案。
+ * 此函数按题目 id 匹配当前题库，纠正 question/options/answer（保留 wrongCount 与 addedAt），
+ * 通过 localStorage 标记只执行一次。
+ */
+export async function syncWrongQuestionsFromBank(): Promise<void> {
+  try {
+    if (localStorage.getItem(WRONG_SYNC_FLAG)) return;
+
+    const db = await getDB();
+    const wrongList = await db.getAll('wrong_questions');
+    if (wrongList.length === 0) {
+      localStorage.setItem(WRONG_SYNC_FLAG, '1');
+      return;
+    }
+
+    const qmap = new Map<string, Question>(
+      (questionsData as Question[]).map((q) => [q.id, q]),
+    );
+
+    const tx = db.transaction('wrong_questions', 'readwrite');
+    let changed = 0;
+
+    for (const wq of wrongList) {
+      const q = qmap.get(wq.id);
+      if (!q) continue;
+      if (
+        wq.answer !== q.answer ||
+        wq.question !== q.question ||
+        JSON.stringify(wq.options) !== JSON.stringify(q.options)
+      ) {
+        await tx.store.put({
+          ...wq,
+          question: q.question,
+          options: q.options,
+          answer: q.answer,
+        });
+        changed++;
+      }
+    }
+
+    await tx.done;
+    localStorage.setItem(WRONG_SYNC_FLAG, '1');
+    if (changed > 0) {
+      console.info(`[错题同步] 已纠正 ${changed} 条错题的答案/选项`);
+    }
+  } catch (err) {
+    console.warn('[错题同步] 失败，跳过本次同步', err);
+  }
 }
 
 // ==================== 答题记录操作 ====================
