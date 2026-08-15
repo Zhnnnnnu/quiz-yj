@@ -1,5 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import questionsData from '../data/questions.json';
+
+/** 题库版本标识：每次更新题库/修正答案后递增，便于用户确认是否已更新 */
+const QUESTION_BANK_VERSION = 'v1.1';
 
 /** 首页 - 三个核心功能入口 */
 export const HomePage: React.FC = () => {
@@ -85,6 +89,10 @@ export const HomePage: React.FC = () => {
       {/* 底部信息 */}
       <p className="text-center text-xs text-slate-500 mt-8 pb-4">
         支持离线使用 · 数据本地存储
+        <br />
+        <span className="text-slate-600">
+          题库 {QUESTION_BANK_VERSION} · 共 {questionsData.length} 题
+        </span>
       </p>
     </div>
   );
